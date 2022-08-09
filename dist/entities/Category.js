@@ -17,6 +17,8 @@ var Category = /** @class */ (function () {
     function Category(label) {
         this.label = label;
     }
+    Category_1 = Category;
+    var Category_1;
     __decorate([
         (0, typeorm_1.PrimaryGeneratedColumn)("increment"),
         __metadata("design:type", Number)
@@ -26,18 +28,15 @@ var Category = /** @class */ (function () {
         __metadata("design:type", String)
     ], Category.prototype, "label", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function (type) { return User_1.User; }, function (user) { return user.id; }, {
-            cascade: true
-        }),
+        (0, typeorm_1.ManyToOne)(function (type) { return User_1.User; }),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", User_1.User)
     ], Category.prototype, "user", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return Note_1.Note; }, function (note) { return note.id; }, {
-            cascade: true
-        }),
+        (0, typeorm_1.OneToMany)(function (type) { return Note_1.Note; }, function (category) { return Category_1; }),
         __metadata("design:type", Array)
     ], Category.prototype, "notes", void 0);
-    Category = __decorate([
+    Category = Category_1 = __decorate([
         (0, typeorm_1.Entity)("tb_categories"),
         __metadata("design:paramtypes", [String])
     ], Category);

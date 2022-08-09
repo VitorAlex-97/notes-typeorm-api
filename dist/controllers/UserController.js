@@ -35,6 +35,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 var User_1 = require("../entities/User");
@@ -44,18 +55,44 @@ var UserController = /** @class */ (function () {
         var _this = this;
         this.userRepository = userRepository;
         this.userService = userService;
-        this.newUser = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var user, passEncrypted, newUser, erros;
-            var _this = this;
+        this.getOneById = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var id, user, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        user = req.body.user;
+                        _a.trys.push([0, 2, , 3]);
+                        id = req.params.id;
+                        console.log(id);
+                        return [4 /*yield*/, this.userService.findOneByIdOrFail(id)];
+                    case 1:
+                        user = _a.sent();
+                        if (!user) {
+                            res.status(400).send({ erroMessage: 'User does not exist' });
+                            return [2 /*return*/];
+                        }
+                        res.status(400).json(user);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_1 = _a.sent();
+                        console.log(error_1);
+                        res.status(500).send({ errorMessage: 'Internal Server Error' });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
+        this.newUser = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var user, passEncrypted, newUser, erros, userExist, userSaved, pass, userData, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        user = req.body;
+                        console.log(user);
                         return [4 /*yield*/, this.userService.encryptPassword(user.pass)];
                     case 1:
                         passEncrypted = _a.sent();
-                        newUser = new User_1.User(user.name, passEncrypted, user.photo);
-                        console.log(newUser);
+                        newUser = new User_1.User(user.username, passEncrypted, user.photo);
                         return [4 /*yield*/, (0, class_validator_1.validate)(User_1.User)];
                     case 2:
                         erros = _a.sent();
@@ -63,22 +100,30 @@ var UserController = /** @class */ (function () {
                             res.status(400).json(erros);
                             return [2 /*return*/];
                         }
-                        this.userRepository.findOne({
-                            where: {
-                                username: newUser.username
-                            }
-                        }).then(function (userRepo) {
-                            if (userRepo)
-                                throw new Error("User already exist");
-                            _this.userRepository.save(newUser).then(function () {
-                                console.log("CRIANDO UM NOVO USUÁRIO");
-                                res.status(201).json({ message: "User created" });
-                            });
-                        }).catch(function (e) {
-                            console.log("error >>> ".concat(e.message));
-                            res.status(400).json({ error: e.message });
-                        });
-                        return [2 /*return*/];
+                        return [4 /*yield*/, this.userRepository.findOne({
+                                where: {
+                                    username: newUser.username,
+                                }
+                            })];
+                    case 3:
+                        userExist = _a.sent();
+                        if (userExist) {
+                            res.status(400).send({ errorMessage: 'User already exist' });
+                            return [2 /*return*/];
+                        }
+                        console.log("CRIANDO UM NOVO USUÁRIO");
+                        return [4 /*yield*/, this.userRepository.save(newUser)];
+                    case 4:
+                        userSaved = _a.sent();
+                        pass = userSaved.pass, userData = __rest(userSaved, ["pass"]);
+                        res.status(201).json(userData);
+                        return [3 /*break*/, 6];
+                    case 5:
+                        error_2 = _a.sent();
+                        console.log(error_2);
+                        res.status(500).send({ errorMessage: 'Internal Server Error' });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         }); };
@@ -86,12 +131,18 @@ var UserController = /** @class */ (function () {
             var _a, password, newPassword, userId;
             var _this = this;
             return __generator(this, function (_b) {
-                _a = [req.body, req.body, req.params], password = _a[0].password, newPassword = _a[1].newPassword, userId = _a[2].userId;
-                this.userRepository.findOne({
+                _a = [
+                    req.body,
+                    req.body,
+                    req.params,
+                ], password = _a[0].password, newPassword = _a[1].newPassword, userId = _a[2].userId;
+                this.userRepository
+                    .findOne({
                     where: {
-                        id: userId
-                    }
-                }).then(function (userRepo) { return __awaiter(_this, void 0, void 0, function () {
+                        id: userId,
+                    },
+                })
+                    .then(function (userRepo) { return __awaiter(_this, void 0, void 0, function () {
                     var _a;
                     return __generator(this, function (_b) {
                         switch (_b.label) {
@@ -105,10 +156,13 @@ var UserController = /** @class */ (function () {
                                 return [4 /*yield*/, this.userService.encryptPassword(newPassword)];
                             case 2:
                                 _a.pass = _b.sent();
-                                this.userRepository.save(userRepo).then(function () {
-                                    console.log('>>>>>>>>>>>>>> SENHA ALTERADA >>>>>>>>>>>>>>>>>');
+                                this.userRepository
+                                    .save(userRepo)
+                                    .then(function () {
+                                    console.log(">>>>>>>>>>>>>> SENHA ALTERADA >>>>>>>>>>>>>>>>>");
                                     res.status(200).json({ message: "Passaword updated" });
-                                }).catch(function (e) {
+                                })
+                                    .catch(function (e) {
                                     console.log("error >>> ".concat(e.message));
                                     res.status(400).json({ error: e.message });
                                 });
@@ -123,7 +177,6 @@ var UserController = /** @class */ (function () {
                 return [2 /*return*/];
             });
         }); };
-        this.userRepository = userRepository;
     }
     return UserController;
 }());

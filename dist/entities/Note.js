@@ -21,6 +21,8 @@ var Note = /** @class */ (function () {
         this.category = category;
         this.user = user;
     }
+    Note_1 = Note;
+    var Note_1;
     __decorate([
         (0, typeorm_1.PrimaryGeneratedColumn)("increment"),
         __metadata("design:type", Number)
@@ -40,22 +42,20 @@ var Note = /** @class */ (function () {
         __metadata("design:type", Date)
     ], Note.prototype, "createdAt", void 0);
     __decorate([
-        (0, typeorm_1.CreateDateColumn)(),
+        (0, typeorm_1.Column)('date', { nullable: true, default: null }),
         __metadata("design:type", Date)
     ], Note.prototype, "editedAt", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function (type) { return User_1.User; }, function (user) { return user.id; }, {
-            cascade: true
-        }),
+        (0, typeorm_1.ManyToOne)(function (type) { return User_1.User; }),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", User_1.User)
     ], Note.prototype, "user", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function (type) { return Category_1.Category; }, function (category) { return category.id; }, {
-            cascade: true
-        }),
+        (0, typeorm_1.ManyToOne)(function (type) { return Category_1.Category; }, function (note) { return Note_1; }, { eager: true }),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", Category_1.Category)
     ], Note.prototype, "category", void 0);
-    Note = __decorate([
+    Note = Note_1 = __decorate([
         (0, typeorm_1.Entity)("tb_notes"),
         __metadata("design:paramtypes", [String, String, Category_1.Category, User_1.User])
     ], Note);

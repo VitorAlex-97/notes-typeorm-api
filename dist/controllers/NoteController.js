@@ -35,6 +35,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NoteController = void 0;
 var Note_1 = require("../entities/Note");
@@ -47,21 +58,17 @@ var NoteController = /** @class */ (function () {
         this.categoruRepository = categoruRepository;
         this.commons = commons;
         this.createNotes = function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            var _a, _b, title, body, userId, categoryId;
+            var newNotes;
             var _this = this;
-            return __generator(this, function (_c) {
-                _a = [
-                    request.body,
-                    request.params,
-                    request.query
-                ], _b = _a[0], title = _b.title, body = _b.body, userId = _a[1].userId, categoryId = _a[2].categoryId;
-                if (!(title && body)) {
-                    response.status(400).json({ error: 'Title & body are required' });
+            return __generator(this, function (_a) {
+                newNotes = request.body;
+                if (!(newNotes.body && newNotes.userId && newNotes.title)) {
+                    response.status(400).json({ error: 'Title, body & userId are required' });
                     return [2 /*return*/];
                 }
                 this.userRepository.findOne({
                     where: {
-                        id: userId
+                        id: newNotes.userId
                     }
                 }).then(function (userRepo) {
                     if (!userRepo)
@@ -69,15 +76,16 @@ var NoteController = /** @class */ (function () {
                     var user = userRepo;
                     _this.categoruRepository.findOne({
                         where: {
-                            id: +categoryId
+                            id: newNotes.categoryId
                         }
                     }).then(function (categoryRepo) {
                         if (!categoryRepo)
                             throw new Error('Category does not exist');
                         var category = categoryRepo;
-                        var newNote = new Note_1.Note(title, body, category, user);
-                        _this.noteRepository.save(newNote).then(function () {
-                            response.status(201).json({ message: 'Note created' });
+                        var newNote = new Note_1.Note(newNotes.title, newNotes.body, category, user);
+                        _this.noteRepository.save(newNote).then(function (notes) {
+                            var user = notes.user, notesData = __rest(notes, ["user"]);
+                            response.status(201).json(notesData);
                         }).catch(function (e) {
                             console.log("error >>> ".concat(e.message));
                             response.status(400).json({ error: e.message });
@@ -136,6 +144,31 @@ var NoteController = /** @class */ (function () {
         this.getNoteByCategory = function (request, response) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/];
+            });
+        }); };
+        this.getAllNotesByUserId = function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            var userId, notes, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        userId = request.params.userId;
+                        return [4 /*yield*/, this.noteRepository.find({ where: { user: { id: userId } } })];
+                    case 1:
+                        notes = _a.sent();
+                        if (notes) {
+                            response.status(200).json(notes);
+                        }
+                        else {
+                            response.status(400).json({ errorMessage: 'User does not exists' });
+                        }
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_1 = _a.sent();
+                        response.status(400).json({ error: error_1.message });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
             });
         }); };
     }

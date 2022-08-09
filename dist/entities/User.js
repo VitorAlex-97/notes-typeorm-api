@@ -13,6 +13,7 @@ exports.User = void 0;
 var class_validator_1 = require("class-validator");
 var typeorm_1 = require("typeorm");
 var Category_1 = require("./Category");
+var Note_1 = require("./Note");
 var uuid_1 = require("uuid");
 var User = /** @class */ (function () {
     function User(username, senha, photo, id) {
@@ -43,15 +44,11 @@ var User = /** @class */ (function () {
         __metadata("design:type", String)
     ], User.prototype, "photo", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return Category_1.Category; }, function (category) { return category.id; }, {
-            cascade: true
-        }),
+        (0, typeorm_1.OneToMany)(function (type) { return Category_1.Category; }, function (user) { return User_1; }),
         __metadata("design:type", Array)
     ], User.prototype, "categories", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return User_1; }, function (user) { return user.id; }, {
-            cascade: true
-        }),
+        (0, typeorm_1.OneToMany)(function (type) { return User_1; }, function (notes) { return Note_1.Note; }),
         __metadata("design:type", Array)
     ], User.prototype, "notes", void 0);
     User = User_1 = __decorate([

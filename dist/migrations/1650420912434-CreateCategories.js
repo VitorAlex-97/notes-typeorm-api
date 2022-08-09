@@ -60,14 +60,14 @@ var CreateCategories1650420912434 = /** @class */ (function () {
                                     isNullable: false
                                 },
                                 {
-                                    name: "id_user",
+                                    name: "userId",
                                     type: "varchar",
                                 }
                             ],
                             foreignKeys: [
                                 {
                                     name: "fk_categories_user",
-                                    columnNames: ["id_user"],
+                                    columnNames: ["userId"],
                                     referencedTableName: "tb_users",
                                     referencedColumnNames: ["id"]
                                 }

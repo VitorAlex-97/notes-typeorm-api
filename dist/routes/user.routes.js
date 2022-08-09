@@ -9,6 +9,7 @@ var router = (0, express_1.Router)();
 var userRepository = dataSource_1.AppDataSource.getRepository(User_1.User);
 var userService = new user_service_1.UserService(userRepository);
 var userController = new UserController_1.UserController(userRepository, userService);
+router.get("/getOneById/:id", userController.getOneById);
 router.post("/new", userController.newUser);
 router.patch("/change-password/:userId", userController.changePassword);
 exports.default = router;

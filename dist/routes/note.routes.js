@@ -13,7 +13,8 @@ var noteRepository = dataSource_1.AppDataSource.getRepository(Note_1.Note);
 var categoryRepository = dataSource_1.AppDataSource.getRepository(Category_1.Category);
 var UserCommon = new Commons_1.Commons(userRepository, categoryRepository, noteRepository);
 var noteController = new NoteController_1.NoteController(noteRepository, userRepository, categoryRepository, UserCommon);
-router.post('/new/:userId', noteController.createNotes);
-router.patch('/update/:userId', noteController.updateNote);
+router.get('/all/:userId', noteController.getAllNotesByUserId);
+router.post('/new/', noteController.createNotes);
+router.patch('/update/:userId?', noteController.updateNote);
 exports.default = router;
 //# sourceMappingURL=note.routes.js.map

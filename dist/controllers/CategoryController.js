@@ -68,6 +68,7 @@ var CategoryController = /** @class */ (function () {
                     case 1:
                         userRepo = _b.sent();
                         newCategory.user = userRepo;
+                        console.log(newCategory.user);
                         return [4 /*yield*/, this.categoryRepository.save(newCategory)];
                     case 2:
                         category = _b.sent();
@@ -76,6 +77,7 @@ var CategoryController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         err_1 = _b.sent();
+                        console.log(err_1);
                         res.status(400).json({ error: err_1.message }).end();
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
