@@ -14,16 +14,17 @@ const categoryRepository = AppDataSource.getRepository(Category);
 const UserCommon = new Commons(userRepository, categoryRepository, noteRepository);
 
 const noteController = new NoteController(
-    noteRepository, 
-    userRepository, 
-    categoryRepository, 
-    UserCommon
+        noteRepository, 
+        userRepository, 
+        categoryRepository, 
+        UserCommon
     );
 
 
 
-router.post('/new/:userId', noteController.createNotes);
-router.patch('/update/:userId', noteController.updateNote);
+router.get('/all/:userId', noteController.getAllNotesByUserId);
+router.post('/new/', noteController.createNotes);
+router.patch('/update/:userId?', noteController.updateNote);
 
 
 export default router;

@@ -10,6 +10,7 @@ const userRepository: Repository<User> = AppDataSource.getRepository(User);
 const userService = new UserService(userRepository)
 const userController = new UserController(userRepository, userService)
 
+router.get("/getOneById/:id", userController.getOneById)
 router.post("/new", userController.newUser);
 router.patch("/change-password/:userId", userController.changePassword);
 

@@ -7,6 +7,7 @@ import { User } from "../entities/User";
 import * as moment from "moment";
 import { AppDataSource } from "../db/dataSource";
 import { Commons } from "../commons/Commons";
+import { InotesDTO } from "../interfaces/notesDTO";
 
 export class NoteController {
     constructor(
@@ -17,20 +18,16 @@ export class NoteController {
     ) {}
 
     createNotes = async (request: Request, response: Response) => {
-        const [ { title, body }, { userId }, { categoryId } ]  = [ 
-            request.body, 
-            request.params, 
-            request.query 
-        ];
+        const newNotes: InotesDTO = request.body
 
-        if(!(title && body)) {
-            response.status(400).json({error: 'Title & body are required'});
+        if(!(newNotes.body && newNotes.userId && newNotes.title)) {
+            response.status(400).json({error: 'Title, body & userId are required'});
             return;
         }
 
         this.userRepository.findOne({
             where: {
-                id: userId
+                id: newNotes.userId
             }
         }).then((userRepo) => {
             if(!userRepo)
@@ -39,17 +36,18 @@ export class NoteController {
             const user =  userRepo;
             this.categoruRepository.findOne({
                 where: {
-                    id: +categoryId
+                    id: newNotes.categoryId
                 }
             }).then((categoryRepo) => {
                 if(!categoryRepo)
                     throw new Error('Category does not exist');
 
                 const category = categoryRepo;
-                const newNote = new Note(title, body, category, user);
+                const newNote = new Note(newNotes.title, newNotes.body, category, user);
 
-                this.noteRepository.save(newNote).then(() => {
-                    response.status(201).json({message: 'Note created'});
+                this.noteRepository.save(newNote).then((notes) => {
+                    const { user, ...notesData } = notes;
+                    response.status(201).json(notesData);
                 }).catch((e) => {
                     console.log(`error >>> ${e.message}`);
                     response.status(400).json({error: e.message});
@@ -100,6 +98,20 @@ export class NoteController {
 
     getNoteByCategory = async (request: Request, response: Response) => {
         
+    }
+
+    getAllNotesByUserId = async (request: Request, response: Response) => {
+        try {
+            const { userId } = request.params
+            const notes = await this.noteRepository.find({ where: { user: { id: userId}}})
+            if (notes) {
+                response.status(200).json(notes)
+            } else {
+                response.status(400).json({errorMessage: 'User does not exists'})
+            }
+        } catch (error) {
+            response.status(400).json({error: error.message});         
+        }
     }
 
 

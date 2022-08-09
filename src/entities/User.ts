@@ -22,14 +22,10 @@ export class User {
     @Length(0, 500)
     photo: string;
 
-    @OneToMany(() => Category, (category) => category.id, {
-        cascade: true
-    })
+    @OneToMany((type) => Category, user => User)
     categories: Array<Category>
 
-    @OneToMany(() => User, (user) => user.id, {
-        cascade: true
-    })
+    @OneToMany((type) => User, notes => Note)
     notes: Array<Note>;
 
     constructor(username: string, senha: string, photo?: string, id?: string) {

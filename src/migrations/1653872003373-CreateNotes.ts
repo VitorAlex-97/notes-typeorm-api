@@ -34,24 +34,24 @@ export class CreateNotes1653872003373 implements MigrationInterface {
                         default: null
                     },
                     {
-                        name: "id_user",
+                        name: "userId",
                         type: "varchar"
                     },
                     {
-                        name: "id_category",
+                        name: "categoryId",
                         type: "numeric"
                     }
                 ],
                 foreignKeys: [
                     {
                         name: "fk_note_user",
-                        columnNames: ["id_user"],
+                        columnNames: ["userId"],
                         referencedTableName: "tb_users",
                         referencedColumnNames: ["id"]
                     },
                     {
                         name: "fk_note_category",
-                        columnNames: ["id_category"],
+                        columnNames: ["categoryId"],
                         referencedTableName: "tb_categories",
                         referencedColumnNames: ["id"]
                     }

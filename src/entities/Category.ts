@@ -1,5 +1,5 @@
 import { type } from "os";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Note } from "./Note";
 import { User } from "./User";
 
@@ -12,14 +12,11 @@ export class Category {
     @Column({type: "text", nullable: false})
     label: string;
 
-    @ManyToOne((type) => User, (user) => user.id, {
-        cascade: true
-    })
+    @ManyToOne((type) => User )
+    @JoinColumn()
     user: User;
 
-    @OneToMany(() => Note, (note) => note.id, {
-        cascade: true
-    })
+    @OneToMany((type) => Note, category => Category)
     notes: Array<Note>
 
     constructor(label: string) {

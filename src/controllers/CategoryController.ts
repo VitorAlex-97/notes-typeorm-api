@@ -3,6 +3,7 @@ import { User } from "../entities/User";
 import { Category } from "../entities/Category";
 import { Repository } from "typeorm";
 import { UserService } from "../services/user.service";
+import { Console } from "console";
 
 export class CategoryController {
     constructor(
@@ -18,10 +19,11 @@ export class CategoryController {
                 throw new Error('Label is required');
 
             const newCategory = new Category(label);
-
+            
             const userRepo = await this.userService.findOneByIdOrFail(userId);
             
             newCategory.user = userRepo;
+            console.log(newCategory.user)
 
             const category: Category = await this.categoryRepository.save(newCategory);
 
@@ -30,9 +32,9 @@ export class CategoryController {
             res.status(201).json(categoryData);
             
         } catch (err) {
+            console.log(err)
             res.status(400).json({error: err.message}).end();
         }
-
     }
 
     getAllCategories = async (req: Request, res: Response) => {

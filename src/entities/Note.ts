@@ -1,5 +1,5 @@
 import { Length } from "class-validator";
-import { Column, CreateDateColumn, DatabaseType, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DatabaseType, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "./Category";
 import { User } from "./User";
 
@@ -8,6 +8,9 @@ export class Note {
     
     @PrimaryGeneratedColumn("increment")
     id: number;
+
+    // @Column("numeric")
+    // categotyId: number;
 
     @Column("varchar")
     @Length(3, 40)
@@ -20,17 +23,21 @@ export class Note {
     @CreateDateColumn()
     createdAt: Date;
 
-    @CreateDateColumn()
+    // @CreateDateColumn({default: null})
+    @Column('date', {nullable: true, default: null})
     editedAt: Date;
 
-    @ManyToOne((type) => User, (user) => user.id, {
-        cascade: true
-    })
+    @ManyToOne((type) => User)
+    @JoinColumn()
     user: User;
 
-    @ManyToOne((type) => Category, (category) => category.id, {
-        cascade: true
-    })
+    // @ManyToOne((type) => Category, (category) => category.id, {
+    //     cascade: true
+    // })
+    // @JoinColumn({name: 'categoryId', referencedColumnName: 'categoryId'})
+    // category: Category;
+    @ManyToOne((type) => Category, note => Note, { eager: true })
+    @JoinColumn()
     category: Category;
 
 
