@@ -26,12 +26,12 @@ export const AppDataSource = new DataSource({
   logging: true,
   logger: 'simple-console',
   // synchronize: true
-  // ssl: true,
-  // extra: {
-  //   ssl: {
-  //     rejectUnauthorized: false
-  //   }
-  // }
+  ssl: true,
+  extra: {
+    ssl: {
+      rejectUnauthorized: false
+    }
+  }
 });
         
 // host: process.env.HOST,

@@ -24,12 +24,12 @@ exports.AppDataSource = new typeorm_1.DataSource({
     logging: true,
     logger: 'simple-console',
     // synchronize: true
-    // ssl: true,
-    // extra: {
-    //   ssl: {
-    //     rejectUnauthorized: false
-    //   }
-    // }
+    ssl: true,
+    extra: {
+        ssl: {
+            rejectUnauthorized: false
+        }
+    }
 });
 // host: process.env.HOST,
 // username: process.env.USER,
