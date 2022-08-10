@@ -25,7 +25,8 @@ export const AppDataSource = new DataSource({
   migrations: [process.env.MIGRATIONS || 'src/migrations/**/*.ts'],
   logging: true,
   logger: 'simple-console',
-  // synchronize: true
+  synchronize: true,
+  migrationsRun: true,
   ssl: true,
   extra: {
     ssl: {
