@@ -22,12 +22,12 @@ server.use(cors())
 
 server.use(API, router);
 
-AppDataSource.initialize().then(() => {
-    console.log("Data Source has been initialized!")
-
-    server.listen(3000, () => {
-        console.log(`Servidor rodando em http://localhost:3000`);
-    });
-})
+(() => AppDataSource.initialize().then(() => {
+}))()
 .catch((error) => console.log(`Erro: ${error}`));
 
+console.log("Data Source has been initialized!")
+
+server.listen(process.env.PORT || 3000, () => {
+    console.log(`Server is running`);
+});

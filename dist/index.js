@@ -18,11 +18,11 @@ server.use(jsonBodyParser);
 server.use(urlEncoderParser);
 server.use(cors());
 server.use(API, index_routes_1.default);
-dataSource_1.AppDataSource.initialize().then(function () {
-    console.log("Data Source has been initialized!");
-    server.listen(3000, function () {
-        console.log("Servidor rodando em http://localhost:3000");
-    });
-})
+(function () { return dataSource_1.AppDataSource.initialize().then(function () {
+}); })()
     .catch(function (error) { return console.log("Erro: ".concat(error)); });
+console.log("Data Source has been initialized!");
+server.listen(process.env.PORT || 3000, function () {
+    console.log("Server is running");
+});
 //# sourceMappingURL=index.js.map
